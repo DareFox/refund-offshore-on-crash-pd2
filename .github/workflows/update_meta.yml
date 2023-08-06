@@ -20,10 +20,17 @@ jobs:
           sed -i "s/VERSION_HERE/$(echo "$GITHUB_REF_NAME")/g" meta_template.json
           mv meta_template.json meta.json
 
+      - name: Replace version in mod.txt
+        run: |
+          echo "Replacing version in mod.txt"
+          perl -pe 's/(?<="version" : "|version": ").+?(?=")/NEW_VERSION/g' mod.txt > new_mod.txt
+          mv new_mod.txt mod.txt
+
       - name: Push changes to meta.json
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
           git add meta.json
-          git commit -m "Updated meta.json with latest release tag"
+          git add mod.txt
+          git commit -m "Updated version tag in meta.json and mod.txt"
           git push
