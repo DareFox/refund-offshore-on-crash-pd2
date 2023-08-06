@@ -1,5 +1,6 @@
 name: Update version in meta.json
-
+permissions:
+  contents: write
 on:
   release:
     types: [published]
