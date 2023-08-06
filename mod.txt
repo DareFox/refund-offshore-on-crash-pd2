@@ -3,7 +3,7 @@
   "description" : "self-explaining title",
   "author" : "DareFox",
   "contact" : "darefoxdev@gmail.com",
-  "version" : """",
+  "version" : "123 4 101 123echo "")",
   "blt_version": 2,
   "priority" : 10,
   "hooks": [
