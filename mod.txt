@@ -1,26 +1,23 @@
 {
-    "name" : "Refund Offshore on crash",
-    "description" : "self-explaining title",
-    "author" : "DareFox",
-    "contact" : "darefoxdev@gmail.com",
-    "version" : """",
-    "blt_version": 2,
-    "priority" : 10,
-    "hooks": [
-		{
-			"hook_id": "lib/managers/moneymanager",
-			"script_path": "mod.lua"
-		}
-	  ],
-    "keybinds" : [
-      {
-          "keybind_id" : "df_test_status",
-          "name" : "Test Keybind",
-          "description" : "An example keybind for demonstration",
-          "script_path" : "moda.lua",
-          "run_in_menu" : true,
-          "run_in_game" : true,
-          "localized" : false
-      }
-  ]
+  "name" : "Refund Offshore on crash",
+  "description" : "self-explaining title",
+  "author" : "DareFox",
+  "contact" : "darefoxdev@gmail.com",
+  "version" : "0.98",
+  "blt_version": 2,
+  "priority" : 10,
+  "hooks": [
+    {
+      "hook_id": "lib/managers/moneymanager",
+      "script_path": "mod.lua"
+    }
+  ],
+  "updates" : [
+    {
+        "identifier" : "darefox_refund_offshore_on_crash",
+        "host": {
+            "meta": "https://raw.githubusercontent.com/DareFox/refund-offshore-on-crash-pd2/main/meta.json"
+        }
+    }
+  ] 
 }
