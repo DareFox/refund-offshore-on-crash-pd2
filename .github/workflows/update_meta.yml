@@ -19,6 +19,8 @@ jobs:
 
       - name: Push changes to meta.json
         run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
           git add meta.json
           git commit -m "Updated meta.json with latest release tag"
           git push
