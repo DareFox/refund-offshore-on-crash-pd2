@@ -23,7 +23,7 @@ jobs:
       - name: Replace version in mod.txt
         run: |
           echo "Replacing version in mod.txt"
-          perl -pe 's/(?<="version" : "|version": ").+?(?=")/NEW_VERSION/g' mod.txt > new_mod.txt
+          perl -pe 's/((?<="version" : ")|(?<="version" :")|(?<="version":")).+(?=")/"$GITHUB_REF_NAME"/g' mod.txt > new_mod.txt
           mv new_mod.txt mod.txt
 
       - name: Push changes to meta.json
