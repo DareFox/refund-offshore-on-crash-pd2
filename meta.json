@@ -1,8 +1,8 @@
 [
     {
         "ident": "darefox_refund_offshore_on_crash",
-        "version": "aaa",
+        "version": "0.99",
         "patchnotes_url": "https://github.com/DareFox/refund-offshore-on-crash-pd2/releases/latest",
-        "download_url": "https://github.com/DareFox/refund-offshore-on-crash-pd2/archive/refs/tags/aaa.zip"
+        "download_url": "https://github.com/DareFox/refund-offshore-on-crash-pd2/archive/refs/tags/0.99.zip"
     }
 ]
