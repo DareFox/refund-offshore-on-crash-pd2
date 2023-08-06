@@ -3,7 +3,7 @@
   "description" : "self-explaining title",
   "author" : "DareFox",
   "contact" : "darefoxdev@gmail.com",
-  "version" : "0.98",
+  "version" : """",
   "blt_version": 2,
   "priority" : 10,
   "hooks": [
