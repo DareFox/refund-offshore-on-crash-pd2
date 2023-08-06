@@ -1,0 +1,24 @@
+name: Update version in meta.json
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  replace-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Replace VERSION_HERE in meta.json
+        run: |
+          echo "Replacing VERSION_HERE in meta.json..."
+          sed -i "s/VERSION_HERE/$(echo "$GITHUB_REF_NAME")/g" meta_example.json
+          mv meta_example.json meta.json
+
+      - name: Push changes to meta.json
+        run: |
+          git add meta.json
+          git commit -m "Updated meta.json with latest release tag"
+          git push
