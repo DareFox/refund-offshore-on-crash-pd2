@@ -14,8 +14,8 @@ jobs:
       - name: Replace VERSION_HERE in meta.json
         run: |
           echo "Replacing VERSION_HERE in meta.json..."
-          sed -i "s/VERSION_HERE/$(echo "$GITHUB_REF_NAME")/g" meta_example.json
-          mv meta_example.json meta.json
+          sed -i "s/VERSION_HERE/$(echo "$GITHUB_REF_NAME")/g" meta_template.json
+          mv meta_template.json meta.json
 
       - name: Push changes to meta.json
         run: |
