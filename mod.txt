@@ -2,7 +2,7 @@
   "name" : "Refund Offshore on crash",
   "description" : "self-explaining title",
   "author" : "DareFox",
-  "contact" : "darefoxdev@gmail.com",
+  "contact" : "linktr.ee/DareFox",
   "version": "0.99",
   "color" : "0.01 0.70 0.06",
   "blt_version": 2,
