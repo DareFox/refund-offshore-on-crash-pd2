@@ -4,6 +4,7 @@
   "author" : "DareFox",
   "contact" : "darefoxdev@gmail.com",
   "version": "0.99",
+  "color" : "0.01 0.70 0.06",
   "blt_version": 2,
   "priority" : 10,
   "hooks": [
