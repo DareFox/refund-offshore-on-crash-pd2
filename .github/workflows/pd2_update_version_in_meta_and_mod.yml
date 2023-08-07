@@ -1,0 +1,114 @@
+name: Create update for SuperBLT mod via version change
+permissions:
+  contents: write
+on: 
+  workflow_dispatch:
+    inputs:
+      branch: 
+        description: "What branch should this action use?"
+        required: true
+        type: string
+        default: "main"
+      release_title:
+        description: "Title for release. Will be used in format %RELEASE_NAME% %MOD_VERSION%"
+        required: true
+        type: string
+        default: "Update"
+      release_version: 
+        description: "Mod version for title, if undefined it will fallback to mod_new_version"
+        type: string
+      mod_new_version:
+        description: 'New version value. Will be used as tag'
+        required: true
+        type: string
+      mod_txt_path:
+        description: 'Releative path to mod.txt from root dir'
+        required: true
+        type: string
+        default: "mod.txt"
+      meta_json_path:
+        description: 'Releative path to meta.json from root dir'
+        required: true
+        type: string
+        default: "meta.json"
+      should_action_replace_download_url:
+        description: "Should action change download url to latest/tag release or don't change it?"
+        type: choice
+        options: 
+        - latest
+        - tag
+        - nochange
+
+jobs:
+  create-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }} 
+          
+      - name: Replace version in mod.txt
+        run: |
+          echo "Replacing version in mod.txt"
+          perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.mod_txt_path }} > new_mod.txt
+          mv new_mod.txt ${{ inputs.mod_txt_path }}
+
+      - name: Replace version in meta.json
+        run: |
+          echo "Replacing version in meta.json"
+          perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
+          mv new_meta.json ${{ inputs.meta_json_path }}
+
+      - name: Determine to what change download_url
+        if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
+        uses: haya14busa/action-cond@v1
+        id: new_download_url
+        with:
+          cond: ${{ github.event.inputs.should_action_replace_download_url == 'tag' }}
+          if_true:  https://github.com/${{ github.repository }}/archive/refs/tags/${{ inputs.mod_new_version }}.zip"
+          if_false: https://github.com/${{ github.repository }}/archive/refs/heads/${{ github.event.inputs.branch }} .zip
+
+      - name: Setup github actions account 
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Push new meta.json and meta.json
+        run: |
+          git add ${{ inputs.meta_json_path }}
+          git add ${{ inputs.mod_txt_path }}
+          git commit -m "Updated version in meta.json and mod.txt"
+          git push
+
+      - name: Change flag to pushed
+        run: echo "IS_PUSHED=true" >> $GITHUB_ENV
+
+      - name: Create release notes
+        uses: johnyherangi/create-release-notes@main
+        id: create-release-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine version for release
+        uses: haya14busa/action-cond@v1
+        id: version_for_release
+        with:
+          cond: ${{ github.event.inputs.release_version != '' }}
+          if_true:  ${{ github.event.inputs.release_version }} 
+          if_false: ${{ github.event.inputs.mod_new_version }}  
+
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: ${{ inputs.mod_new_version }}
+            release_name: ${{ github.event.inputs.release_title }} ${{ steps.version_for_release.outputs.value }}
+            body: ${{ steps.create-release-notes.outputs.release-notes }}
+
+      - name: Revert commits on failure
+        if: ${{ failure() && ${{ env.IS_PUSHED }} }}
+        run: |
+          git revert $(git rev-parse HEAD)
+          git push
