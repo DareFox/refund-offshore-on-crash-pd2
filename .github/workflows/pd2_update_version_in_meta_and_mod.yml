@@ -8,7 +8,7 @@ on:
         description: "What branch should this action use?"
         required: true
         type: string
-        default: $default-branch
+        default: "main"
       release_title:
         description: "Title for release. Will be used in format %RELEASE_NAME% %MOD_VERSION%"
         required: true
