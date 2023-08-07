@@ -35,8 +35,8 @@ on:
         description: "Should action change download url to latest/tag release or don't change it?"
         type: choice
         options: 
-        - latest
         - tag
+        - latest
         - nochange
 
 jobs:
