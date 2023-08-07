@@ -68,7 +68,14 @@ jobs:
           cond: ${{ github.event.inputs.should_action_replace_download_url == 'tag' }}
           if_true:  https://github.com/${{ github.repository }}/archive/refs/tags/${{ inputs.mod_new_version }}.zip"
           if_false: https://github.com/${{ github.repository }}/archive/refs/heads/${{ github.event.inputs.branch }} .zip
-
+      
+      - name: Replace download_url in meta.json
+        if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
+        run: |
+          echo "Replacing download_url in meta.json"
+          perl -pe 's/(?<="download_url")\s*:\s*".*"/: "${{ steps.new_download_url.outputs.value }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
+          mv new_meta.json ${{ inputs.meta_json_path }}
+          
       - name: Setup github actions account 
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
