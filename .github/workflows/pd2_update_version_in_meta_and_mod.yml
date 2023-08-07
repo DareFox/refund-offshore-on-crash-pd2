@@ -73,7 +73,8 @@ jobs:
         if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
         run: |
           echo "Replacing download_url in meta.json"
-          perl -pe 's/(?<="download_url")\s*:\s*".*"/: "${{ steps.new_download_url.outputs.value }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
+          echo "New url is ${{ steps.new_download_url.outputs.value }}"
+          perl -pe 's#(?<="download_url")\s*:\s*".*"#: "${{ steps.new_download_url.outputs.value }}"#g' ${{ inputs.meta_json_path }} > new_meta.json
           mv new_meta.json ${{ inputs.meta_json_path }}
           
       - name: Setup github actions account 
