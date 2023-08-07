@@ -66,7 +66,7 @@ jobs:
         id: new_download_url
         with:
           cond: ${{ github.event.inputs.should_action_replace_download_url == 'tag' }}
-          if_true:  https://github.com/${{ github.repository }}/archive/refs/tags/${{ inputs.mod_new_version }}.zip"
+          if_true:  https://github.com/${{ github.repository }}/archive/refs/tags/${{ inputs.mod_new_version }}.zip
           if_false: https://github.com/${{ github.repository }}/archive/refs/heads/${{ github.event.inputs.branch }} .zip
       
       - name: Replace download_url in meta.json
