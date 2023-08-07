@@ -8,7 +8,7 @@ on:
         description: "What branch should this action use?"
         required: true
         type: string
-        default: "main"
+        default: $default-branch
       release_title:
         description: "Title for release. Will be used in format %RELEASE_NAME% %MOD_VERSION%"
         required: true
@@ -108,7 +108,7 @@ jobs:
             body: ${{ steps.create-release-notes.outputs.release-notes }}
 
       - name: Revert commits on failure
-        if: ${{ failure() && ${{ env.IS_PUSHED }} }}
+        if: ${{ failure() && env.IS_PUSHED }}
         run: |
           git revert $(git rev-parse HEAD)
           git push
