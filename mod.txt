@@ -6,6 +6,7 @@
   "version": "0.99",
   "color" : "0.01 0.70 0.06",
   "blt_version": 2,
+  "image": "icon.png"
   "priority" : 10,
   "hooks": [
     {
