@@ -61,7 +61,7 @@ local function getHashOfCrash()
     end
 end
 
-local function onWillingfulContractTermination()
+local function onWillfulContractTermination()
     Log("Player has terminated contract willingfully. Reset cashbacks status")
     RefundStatus.OffshoreMoneySpend = nil
     RefundStatus.IsJobActive = false
@@ -85,15 +85,15 @@ Hooks:PostHook(MoneyManager, "on_buy_premium_contract", "REFUND_CRASH_ON_CONTRAC
 )
 
 Hooks:PreHook(MenuCallbackHandler, "load_start_menu_lobby", "REFUND_CRASH_ABORT", function()
-    onWillingfulContractTermination()
+    onWillfulContractTermination()
 end)
 
 Hooks:PreHook(MenuCallbackHandler, "_dialog_end_game_yes", "REFUND_CRASH_END_GAME_YES", function()
-    onWillingfulContractTermination()
+    onWillfulContractTermination()
 end)
 
 Hooks:PreHook(MenuManager, "on_leave_lobby", "REFUND_CRASH_ON_LEAVE_LOBBY", function()
-    onWillingfulContractTermination()
+    onWillfulContractTermination()
 end)
 
 Hooks:PostHook(MoneyManager, "load", "REFUND_CRASH_SETUP", function()    
