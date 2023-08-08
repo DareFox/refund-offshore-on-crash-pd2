@@ -3,7 +3,7 @@
   "description" : "self-explaining title",
   "author" : "DareFox",
   "contact" : "linktr.ee/DareFox",
-  "version": "1.0",
+  "version": "1.1",
   "color" : "0.01 0.70 0.06",
   "blt_version": 2,
   "image": "icon.png"

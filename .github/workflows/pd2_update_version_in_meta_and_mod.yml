@@ -60,23 +60,34 @@ jobs:
           perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
           mv new_meta.json ${{ inputs.meta_json_path }}
 
+      - name: Determine filename based on download_url choice
+        if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
+        uses: haya14busa/action-cond@v1
+        id: release_filename
+        with:
+          cond: ${{ github.event.inputs.should_action_replace_download_url == 'tag' }}
+          if_true:  ${{ github.event.inputs.mod_new_version }}@${{ github.event.repository.name }}.zip
+          if_false: ${{ github.repository_owner }}@${{ github.event.repository.name }}.zip
+
       - name: Determine to what change download_url
         if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
         uses: haya14busa/action-cond@v1
         id: new_download_url
         with:
           cond: ${{ github.event.inputs.should_action_replace_download_url == 'tag' }}
-          if_true:  https://github.com/${{ github.repository }}/archive/refs/tags/${{ inputs.mod_new_version }}.zip
-          if_false: https://github.com/${{ github.repository }}/archive/refs/heads/${{ github.event.inputs.branch }} .zip
+          if_true:  https://github.com/${{ github.repository }}/releases/download/${{ inputs.mod_new_version }}/${{ steps.release_filename.outputs.value }}
+          # Why GitHub? Why for latest release its /latest/download, but for tag is /download/tag?
+          if_false: https://github.com/${{ github.repository }}/releases/latest/download/${{ steps.release_filename.outputs.value }}
       
       - name: Replace download_url in meta.json
         if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
         run: |
           echo "Replacing download_url in meta.json"
           echo "New url is ${{ steps.new_download_url.outputs.value }}"
+          echo "Release filename is ${{ steps.release_filename.outputs.value }}"
           perl -pe 's#(?<="download_url")\s*:\s*".*"#: "${{ steps.new_download_url.outputs.value }}"#g' ${{ inputs.meta_json_path }} > new_meta.json
           mv new_meta.json ${{ inputs.meta_json_path }}
-          
+
       - name: Setup github actions account 
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -106,13 +117,21 @@ jobs:
           if_true:  ${{ github.event.inputs.release_version }} 
           if_false: ${{ github.event.inputs.mod_new_version }}  
 
+      - name: Create archive for release
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: ${{ steps.release_filename.outputs.value }}
+          exclusions: '*.git* .github/**/*.*'
+
       - name: Create release
-        uses: actions/create-release@v1
+        uses: ncipollo/release-action@v1
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            tag_name: ${{ inputs.mod_new_version }}
-            release_name: ${{ github.event.inputs.release_title }} ${{ steps.version_for_release.outputs.value }}
+            artifacts: ${{ steps.release_filename.outputs.value }}
+            tag: ${{ inputs.mod_new_version }}
+            name: ${{ github.event.inputs.release_title }} ${{ steps.version_for_release.outputs.value }}
             body: ${{ steps.create-release-notes.outputs.release-notes }}
 
       - name: Revert commits on failure
