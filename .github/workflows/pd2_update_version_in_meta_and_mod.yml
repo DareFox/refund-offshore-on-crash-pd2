@@ -38,6 +38,9 @@ on:
         - tag
         - latest
         - nochange
+      filename_release: 
+        description: 'What filename should be used for release artifact. If you omit this, action will use "%Owner%@%Repo%" format' 
+        type: string
 
 jobs:
   create-update:
@@ -60,14 +63,14 @@ jobs:
           perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
           mv new_meta.json ${{ inputs.meta_json_path }}
 
-      - name: Determine filename based on download_url choice
+      - name: Determine filename based on input
         if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
         uses: haya14busa/action-cond@v1
         id: release_filename
         with:
-          cond: ${{ github.event.inputs.should_action_replace_download_url == 'tag' }}
-          if_true:  ${{ github.event.inputs.mod_new_version }}@${{ github.event.repository.name }}.zip
-          if_false: ${{ github.repository_owner }}@${{ github.event.repository.name }}.zip
+          cond: ${{ github.event.inputs.filename_release == '' }}
+          if_true:  ${{ github.repository_owner }}@${{ github.event.repository.name }}.zip
+          if_false: ${{ github.event.inputs.filename_release }}.zip
 
       - name: Determine to what change download_url
         if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
