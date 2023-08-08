@@ -24,7 +24,7 @@ on:
         type: string
         default: "meta.json"
       filename_release: 
-        description: 'What filename should be used for release artifact. If omitted, action will use "%OWNER%#%REPO%" format' 
+        description: 'What filename should be used for release artifact. If omitted, action will use "%OWNER%.%REPO%" format' 
         type: string
       release_title:
         description: 'Title for release. Will be used in format "%RELEASE_TITLE% %RELEASE_TITLE_VERSION%"'
@@ -80,7 +80,7 @@ jobs:
         id: release_filename
         with:
           cond: ${{ github.event.inputs.filename_release == '' }}
-          if_true:  ${{ github.repository_owner }}#${{ github.event.repository.name }}.zip
+          if_true:  ${{ github.repository_owner }}.${{ github.event.repository.name }}.zip
           if_false: ${{ github.event.inputs.filename_release }}.zip
 
       - name: Determine to what change download_url
@@ -165,4 +165,3 @@ jobs:
         run: |
           git revert $(git rev-parse HEAD)
           git push
-
