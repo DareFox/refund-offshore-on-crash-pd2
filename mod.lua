@@ -62,7 +62,7 @@ local function getHashOfCrash()
 end
 
 local function onWillfulContractTermination()
-    Log("Player has terminated contract willingfully. Reset cashbacks status")
+    Log("Player has terminated contract willfully. Reset cashbacks status")
     RefundStatus.OffshoreMoneySpend = nil
     RefundStatus.IsJobActive = false
 end
