@@ -38,6 +38,13 @@ on:
         - tag
         - latest
         - nochange
+      should_replace_patchnotes: 
+        description: "Should action change patchnotes url to latest/tag release or don't change it?"
+        type: choice
+        options: 
+        - tag
+        - latest
+        - nochange
       filename_release: 
         description: 'What filename should be used for release artifact. If you omit this, action will use "%Owner%@%Repo%" format' 
         type: string
@@ -50,21 +57,25 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.branch }} 
-          
-      - name: Replace version in mod.txt
-        run: |
-          echo "Replacing version in mod.txt"
-          perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.mod_txt_path }} > new_mod.txt
-          mv new_mod.txt ${{ inputs.mod_txt_path }}
+      
+      - name: Determine version for release
+        uses: haya14busa/action-cond@v1
+        id: version_for_release
+        with:
+          cond: ${{ github.event.inputs.release_version != '' }}
+          if_true:  ${{ github.event.inputs.release_version }} 
+          if_false: ${{ github.event.inputs.mod_new_version }}  
 
-      - name: Replace version in meta.json
-        run: |
-          echo "Replacing version in meta.json"
-          perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
-          mv new_meta.json ${{ inputs.meta_json_path }}
+      - name: Determine patchnotes url based on input
+        if: ${{ inputs.should_replace_patchnotes != 'nochange' }}
+        uses: haya14busa/action-cond@v1
+        id: patchnotes_url
+        with:
+          cond: ${{ github.event.inputs.should_replace_patchnotes == 'tag' }}
+          if_true:  https://github.com/${{ github.repository }}/releases/tag/${{ inputs.mod_new_version }}
+          if_false: https://github.com/${{ github.repository }}/releases/latest
 
       - name: Determine filename based on input
-        if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
         uses: haya14busa/action-cond@v1
         id: release_filename
         with:
@@ -81,6 +92,26 @@ jobs:
           if_true:  https://github.com/${{ github.repository }}/releases/download/${{ inputs.mod_new_version }}/${{ steps.release_filename.outputs.value }}
           # Why GitHub? Why for latest release its /latest/download, but for tag is /download/tag?
           if_false: https://github.com/${{ github.repository }}/releases/latest/download/${{ steps.release_filename.outputs.value }}
+
+      - name: Replace version in mod.txt
+        run: |
+          echo "Replacing version in mod.txt"
+          perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.mod_txt_path }} > new_mod.txt
+          mv new_mod.txt ${{ inputs.mod_txt_path }}
+
+      - name: Replace version in meta.json
+        run: |
+          echo "Replacing version in meta.json"
+          perl -pe 's/(?<="version")\s*:\s*".*"/: "${{ inputs.mod_new_version }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
+          mv new_meta.json ${{ inputs.meta_json_path }}
+
+      - name: Replace patchnotes url in meta.json
+        if: ${{ inputs.should_replace_patchnotes != 'nochange' }}
+        run: |
+          echo "Replacing patchnotes url in meta.json"
+          echo "New patchnotes url is ${{ steps.patchnotes_url.outputs.value }}"
+          perl -pe 's/(?<="patchnotes_url")\s*:\s*".*"/: "${{ steps.patchnotes_url.outputs.value }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
+          mv new_meta.json ${{ inputs.meta_json_path }}
       
       - name: Replace download_url in meta.json
         if: ${{ inputs.should_action_replace_download_url != 'nochange' }}
@@ -111,14 +142,6 @@ jobs:
         id: create-release-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Determine version for release
-        uses: haya14busa/action-cond@v1
-        id: version_for_release
-        with:
-          cond: ${{ github.event.inputs.release_version != '' }}
-          if_true:  ${{ github.event.inputs.release_version }} 
-          if_false: ${{ github.event.inputs.mod_new_version }}  
 
       - name: Create archive for release
         uses: thedoctor0/zip-release@0.7.1
