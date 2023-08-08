@@ -110,7 +110,7 @@ jobs:
         run: |
           echo "Replacing patchnotes url in meta.json"
           echo "New patchnotes url is ${{ steps.patchnotes_url.outputs.value }}"
-          perl -pe 's/(?<="patchnotes_url")\s*:\s*".*"/: "${{ steps.patchnotes_url.outputs.value }}"/g' ${{ inputs.meta_json_path }} > new_meta.json
+          perl -pe 's#(?<="patchnotes_url")\s*:\s*".*"#: "${{ steps.patchnotes_url.outputs.value }}"#g' ${{ inputs.meta_json_path }} > new_meta.json
           mv new_meta.json ${{ inputs.meta_json_path }}
       
       - name: Replace download_url in meta.json
