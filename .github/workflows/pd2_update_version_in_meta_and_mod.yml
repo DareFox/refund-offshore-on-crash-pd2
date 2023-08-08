@@ -24,15 +24,15 @@ on:
         type: string
         default: "meta.json"
       filename_release: 
-        description: 'What filename should be used for release artifact. If omitted, action will use "%Owner%@%Repo%" format' 
+        description: 'What filename should be used for release artifact. If omitted, action will use "%OWNER%@%REPO%" format' 
         type: string
       release_title:
-        description: "Title for release. Will be used in format %RELEASE_TITLE% %RELEASE_TITLE_VERSION%"
+        description: 'Title for release. Will be used in format "%RELEASE_TITLE% %RELEASE_TITLE_VERSION%"'
         required: true
         type: string
         default: "Update"
       release_title_version: 
-        description: "Mod version for title, if omitted it will fallback to mod_new_version. Will be used in format %RELEASE_TITLE% %RELEASE_TITLE_VERSION%"
+        description: 'Mod version for title, if omitted it will fallback to tag name. Will be used in format "%RELEASE_TITLE% %RELEASE_TITLE_VERSION%"'
         type: string
       should_action_replace_download_url:
         description: "Should action change download url to latest/tag release or don't change it?"
