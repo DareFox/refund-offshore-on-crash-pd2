@@ -9,14 +9,6 @@ on:
         required: true
         type: string
         default: "main"
-      release_title:
-        description: "Title for release. Will be used in format %RELEASE_NAME% %MOD_VERSION%"
-        required: true
-        type: string
-        default: "Update"
-      release_version: 
-        description: "Mod version for title, if undefined it will fallback to mod_new_version"
-        type: string
       mod_new_version:
         description: 'New version value. Will be used as tag'
         required: true
@@ -31,6 +23,17 @@ on:
         required: true
         type: string
         default: "meta.json"
+      filename_release: 
+        description: 'What filename should be used for release artifact. If omitted, action will use "%Owner%@%Repo%" format' 
+        type: string
+      release_title:
+        description: "Title for release. Will be used in format %RELEASE_TITLE% %RELEASE_TITLE_VERSION%"
+        required: true
+        type: string
+        default: "Update"
+      release_title_version: 
+        description: "Mod version for title, if omitted it will fallback to mod_new_version. Will be used in format %RELEASE_TITLE% %RELEASE_TITLE_VERSION%"
+        type: string
       should_action_replace_download_url:
         description: "Should action change download url to latest/tag release or don't change it?"
         type: choice
@@ -45,9 +48,6 @@ on:
         - tag
         - latest
         - nochange
-      filename_release: 
-        description: 'What filename should be used for release artifact. If you omit this, action will use "%Owner%@%Repo%" format' 
-        type: string
 
 jobs:
   create-update:
@@ -62,8 +62,8 @@ jobs:
         uses: haya14busa/action-cond@v1
         id: version_for_release
         with:
-          cond: ${{ github.event.inputs.release_version != '' }}
-          if_true:  ${{ github.event.inputs.release_version }} 
+          cond: ${{ github.event.inputs.release_title_version != '' }}
+          if_true:  ${{ github.event.inputs.release_title_version }} 
           if_false: ${{ github.event.inputs.mod_new_version }}  
 
       - name: Determine patchnotes url based on input
