@@ -67,6 +67,7 @@ function RefundMod:Load()
     end
 
     return Util.CreateObserverTable(status, function ()
+        Util.Log("State has been changed, saving file")
         self:Save()
     end)
 end
