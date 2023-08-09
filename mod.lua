@@ -80,6 +80,15 @@ function RefundMod:getHashOfCrash()
     end
 end
 
+function RefundMod:refund(new_hash)
+    Util.addOffshore(self.Status.OffshoreMoneySpend)
+    self.Status.PreviousCrashHash = new_hash
+
+    if self.Status.ShowMessage then
+        QuickMenu:new("Refund offshore on crash", "Refunded " .. self.Status.OffshoreMoneySpend "$ offshore to your account", {}):Show()
+    end
+end
+
 function RefundMod:onWillfulContractTermination()
     Util.Log("Player has terminated contract willfully. Reset cashbacks status")
     self.Status.OffshoreMoneySpend = nil
@@ -138,6 +147,5 @@ Hooks:PostHook(MoneyManager, "load", "REFUND_CRASH_SETUP", function()
         return
     end
 
-    Util.addOffshore(RefundMod.Status.OffshoreMoneySpend)
-    RefundMod.Status.PreviousCrashHash = currentHash
+    RefundMod:refund(currentHash)
 end)
