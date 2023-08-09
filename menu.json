@@ -1,0 +1,18 @@
+{
+	"menu_id" : "refund_offshore_on_crash_menu",
+	"parent_menu_id" : "blt_options",
+	"title" : "REFUND OFFSHORE ON CRASH",
+	"description" : "",
+	"localized": false,
+	"items" : [
+		{
+			"type" : "toggle",
+			"id" : "showCrashRefundMessage_toggle",
+			"title" : "Show message on refund",
+            "callback": "showCrashRefundMessage_onChange",
+            "localized": false,
+			"description" : "",
+			"default_value" : true
+		}
+	]
+}
