@@ -36,7 +36,7 @@ Util.Log("Hello everynya!")
 ----------------
 _G.RefundMod = _G.RefundMod or {}
 RefundMod.ModPath = ModPath -- cache it
-RefundMod.SavePath = ModPath .. "crash_save_cashback.json"
+RefundMod.SavePath = ModPath .. "refund_on_crash_save.json"
 RefundMod.CrashlogPath = Application:nice_path(os.getenv("LOCALAPPDATA") .. '/PAYDAY 2/', true) .. 'crashlog.txt'
 
 
