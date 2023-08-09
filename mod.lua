@@ -28,6 +28,24 @@ function Util.LogTable(table)
       Util.Log('    ' .. tostring(index) .. ' : ' .. tostring(value))
     end
 end
+
+function Util.createMergedTable(table1, table2)
+    local mergedTable = {}
+
+    -- Copy values from table1 to mergedTable
+    for key, value in pairs(table1) do
+        mergedTable[key] = value
+    end
+
+    -- Merge values from table2, only if they don't exist in table1
+    for key, value in pairs(table2) do
+        if mergedTable[key] == nil then
+            mergedTable[key] = value
+        end
+    end
+
+    return mergedTable
+end
   
 function Util.addOffshore(money)
     Util.Log("Current offshore: " .. tostring(managers.money:offshore()))
