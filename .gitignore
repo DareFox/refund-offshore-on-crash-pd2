@@ -40,3 +40,5 @@ luac.out
 *.hex
 
 crash_save_cashback.json
+# new filename
+refund_on_crash_save.json 
