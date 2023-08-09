@@ -98,7 +98,7 @@ function RefundMod:refund(new_hash)
     self.Status.PreviousCrashHash = new_hash
 
     if self.Status.ShowMessage then
-        QuickMenu:new("Refund offshore on crash", "Refunded " .. self.Status.OffshoreMoneySpend "$ offshore to your account", {}):Show()
+        QuickMenu:new("Refund offshore on crash", "Refunded " .. self.Status.OffshoreMoneySpend .. "$ offshore to your account", {}):Show()
     end
 end
 
