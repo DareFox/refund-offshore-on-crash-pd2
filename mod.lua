@@ -109,6 +109,7 @@ function RefundMod:onWillfulContractTermination()
 end
 
 RefundMod.Status = RefundMod:Load()
+RefundMod:Save()
 
 -------------
 --- HOOKS ---
