@@ -74,6 +74,7 @@ function RefundMod:Load()
             PreviousCrashHash = '',
             IsJobActive = false,
             OffshoreMoneySpend = nil,
+            ShowMessage = true,
         }
     end
 
