@@ -46,6 +46,7 @@ RefundMod.ModPath = ModPath -- cache it
 RefundMod.SavePath = ModPath .. "refund_on_crash_save.json"
 RefundMod.CrashlogPath = Application:nice_path(os.getenv("LOCALAPPDATA") .. '/PAYDAY 2/', true) .. 'crashlog.txt'
 RefundMod.MenuPath = ModPath .. "menu.json"
+RefundMod._Status = {}
 
 function RefundMod:Save()
     local Save = io.open(self.SavePath, "w+")
@@ -76,7 +77,8 @@ function RefundMod:Load()
         }
     end
 
-    return Util.CreateObserverTable(status, function ()
+    self._Status = status
+    return Util.CreateObserverTable(status, function (realTable)
         Util.Log("State has been changed, saving file")
         self:Save()
     end)
