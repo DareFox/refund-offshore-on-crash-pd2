@@ -77,6 +77,12 @@ end
 
 function RefundMod:Load()
     local file = io.open(self.SavePath, "r")
+    local defaultStatus = {
+        PreviousCrashHash = '',
+        IsJobActive = false,
+        OffshoreMoneySpend = nil,
+        ShowMessage = true,
+    }
     local status = nil
     if file then
         Util.Log("Can read save, decoding it")
@@ -89,12 +95,9 @@ function RefundMod:Load()
 
     if status == nil then
         Util.Log("Save is empty or I can't open it")
-        status = {
-            PreviousCrashHash = '',
-            IsJobActive = false,
-            OffshoreMoneySpend = nil,
-            ShowMessage = true,
-        }
+        status = defaultStatus
+    else
+        status = Util.createMergedTable(status, defaultStatus)
     end
 
     Util.Log("Load()")
