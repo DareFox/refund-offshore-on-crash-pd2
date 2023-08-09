@@ -51,7 +51,7 @@ RefundMod._Status = {}
 function RefundMod:Save()
     local Save = io.open(self.SavePath, "w+")
     if Save then
-        Save:write(json.encode(self.Status))
+        Save:write(json.encode(self._Status))
         Save:close()
     end
 end
