@@ -61,6 +61,9 @@ function RefundMod:Load()
     if file then
         Util.Log("Can read save, decoding it")
         status = json.decode(file:read("*all"))
+        if next(status) == nil then
+            status = nil
+        end
         file:close()
     end
 
