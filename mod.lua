@@ -23,6 +23,13 @@ function Util.Log(...)
     log("[REFUND CRASH]: " .. tostring(first), unpack(args))
 end
 
+function Util.LogTable(table)
+    Util.Log(tostring(table))
+    for index, value in pairs(table) do 
+      Util.Log('    ' .. tostring(index) .. ' : ' .. tostring(value))
+    end
+end
+  
 function Util.addOffshore(money)
     Util.Log("Current offshore: " .. tostring(managers.money:offshore()))
     managers.money:add_to_offshore(RefundMod.Status.OffshoreMoneySpend)
