@@ -135,6 +135,12 @@ Hooks:PreHook(MenuManager, "on_leave_lobby", "REFUND_CRASH_ON_LEAVE_LOBBY", func
     RefundMod:onWillfulContractTermination()
 end)
 
+MenuCallbackHandler.showCrashRefundMessage_onChange = function (self, item)
+    local bool = item:value() == 'on' 
+    RefundMod.Status.ShowMessage = bool
+end
+MenuHelper:LoadFromJsonFile(RefundMod.MenuPath, RefundMod, RefundMod.Status)
+
 Hooks:PostHook(MoneyManager, "load", "REFUND_CRASH_SETUP", function()    
     --- START UP 
     local currentHash = RefundMod:getHashOfCrash()
