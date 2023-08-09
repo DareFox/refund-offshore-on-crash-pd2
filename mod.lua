@@ -16,7 +16,6 @@ function Util.CreateObserverTable(table, callback)
     return observer
 end
 
-
 function Util.Log(...)
     local args = { ... }
     local first = table.remove(args, 1)
@@ -51,6 +50,8 @@ RefundMod._Status = {}
 function RefundMod:Save()
     local Save = io.open(self.SavePath, "w+")
     if Save then
+        Util.Log("Save()")
+        Util.LogTable(self._Status)
         Save:write(json.encode(self._Status))
         Save:close()
     end
@@ -78,6 +79,8 @@ function RefundMod:Load()
         }
     end
 
+    Util.Log("Load()")
+    Util.LogTable(status)
     self._Status = status
     return Util.CreateObserverTable(status, function (realTable)
         Util.Log("State has been changed, saving file")
