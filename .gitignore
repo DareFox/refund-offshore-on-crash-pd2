@@ -42,3 +42,7 @@ luac.out
 crash_save_cashback.json
 # new filename
 refund_on_crash_save.json 
+
+# for testing lua
+playground.lua
+sandbox.lua
