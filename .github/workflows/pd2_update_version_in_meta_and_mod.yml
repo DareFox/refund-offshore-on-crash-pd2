@@ -131,7 +131,7 @@ jobs:
         run: |
           git add ${{ inputs.meta_json_path }}
           git add ${{ inputs.mod_txt_path }}
-          git commit -m "Updated version in meta.json and mod.txt"
+          git commit -m "Updated version in meta.json and mod.txt" || echo "Ignore commit failure, proceed. Error code: $?"
           git push
 
       - name: Change flag to pushed
