@@ -161,7 +161,7 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            artifacts: ${{ steps.release_filename.outputs.value }}
+            artifacts: /tmp/${{ steps.release_filename.outputs.value }}
             tag: ${{ inputs.mod_new_version }}
             name: ${{ github.event.inputs.release_title }} ${{ steps.version_for_release.outputs.value }}
             body: ${{ steps.create-release-notes.outputs.release-notes }}
