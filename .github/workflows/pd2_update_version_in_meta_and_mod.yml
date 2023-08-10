@@ -145,14 +145,15 @@ jobs:
 
       - name: Create folder for archive
         run: |
-          mkdir /tmp/${{ github.event.repository.name }}
-          cp -r . /tmp/${{ github.event.repository.name }}
+          mkdir /tmp/release-archive
+          mkdir /tmp/release-archive/${{ github.event.repository.name }}
+          cp -r . /tmp/release-archive/${{ github.event.repository.name }}
 
       - name: Create archive for release
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: 'zip'
-          directory: /tmp/${{ github.event.repository.name }}
+          directory: /tmp/release-archive/
           filename: ${{ steps.release_filename.outputs.value }}
           exclusions: '*.git* .github/**/*.*'
 
@@ -161,7 +162,7 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            artifacts: /tmp/${{ github.event.repository.name }}/${{ steps.release_filename.outputs.value }}
+            artifacts: /tmp/release-archive/${{ steps.release_filename.outputs.value }}
             tag: ${{ inputs.mod_new_version }}
             name: ${{ github.event.inputs.release_title }} ${{ steps.version_for_release.outputs.value }}
             body: ${{ steps.create-release-notes.outputs.release-notes }}
