@@ -8,7 +8,7 @@ on:
         description: "What branch should this action use?"
         required: true
         type: string
-        default: "main"
+        default: $default-branch
       mod_new_version:
         description: 'New version value. Will be used as tag'
         required: true
@@ -143,10 +143,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Create folder for archive
+        run: 
+          mkdir /tmp/${{ github.event.repository.name }}
+          cp -r . /tmp/${{ github.event.repository.name }}
+
       - name: Create archive for release
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: 'zip'
+          directory: /tmp/${{ github.event.repository.name }}
           filename: ${{ steps.release_filename.outputs.value }}
           exclusions: '*.git* .github/**/*.*'
 
