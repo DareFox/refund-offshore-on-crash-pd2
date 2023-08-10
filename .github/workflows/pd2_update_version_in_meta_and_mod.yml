@@ -144,7 +144,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create folder for archive
-        run: 
+        run: |
           mkdir /tmp/${{ github.event.repository.name }}
           cp -r . /tmp/${{ github.event.repository.name }}
 
