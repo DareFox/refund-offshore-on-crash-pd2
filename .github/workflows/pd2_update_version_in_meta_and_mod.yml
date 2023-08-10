@@ -157,6 +157,16 @@ jobs:
           filename: ${{ steps.release_filename.outputs.value }}
           exclusions: '*.git* .github/**/*.*'
 
+      - name: Debug
+        run: |
+          echo "root --- :"
+          ls .
+          echo "/tmp/release-archive/ --- :"
+          ls  /tmp/release-archive/
+          echo "tmp --- :"
+          ls /tmp/
+
+
       - name: Create release
         uses: ncipollo/release-action@v1
         env:
